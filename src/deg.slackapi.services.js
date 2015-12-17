@@ -1,8 +1,7 @@
 ﻿'use strict';
 (function (angular) {
 
-    angular.module("Deg.SlackApi").service('slackSvc', ['$http', '$log', 'slackConfig', function ($http, $log, slackConfig) {
-
+    angular.module("Deg.SlackApi").service('slackSvc', ['$http', '$window', '$log', 'slackConfig', function ($http, $window, $log, slackConfig) {
 
         return {
             //auth
@@ -159,7 +158,7 @@
         function authorizeApp(clientId, params) {
             var qs = "&" + toQueryString(params);
             var url = slackConfig.OAuthUrl + "?client_id=" + clientId + qs;
-            window.location.replace(url);
+            $window.location.href= url;
         }
         function initToken(token, callback) {
             slackConfig.DefaultToken = token;
