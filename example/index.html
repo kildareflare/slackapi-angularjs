@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>SlackSvc Example</title>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.1/angular.min.js"></script>
+<script type="text/javascript" src="../src/deg.slackapi.module.js"></script>
+<script type="text/javascript" src="../src/deg.slackapi.services.js"></script>
+
+<script type="text/javascript">
+
+  angular.module('app', ['Deg.SlackApi' ]); 
+  
+  angular.module('app').controller('appController', appController);
+  
+  appController.$inject = ['slackSvc'];
+  
+  function appController(slackSvc)
+  {
+        var ctrl = this;
+		
+        slackSvc.InitToken('your token here');
+    
+		slackSvc.users.list()
+			.then(function(response){
+				if(response.ok )
+				{
+					ctrl.response = response;
+				}
+				else
+				{
+					ctrl.error = response.error;
+				}
+			});
+  }
+</script>
+</head>
+ 
+<body>
+	<div ng-app="app" ng-controller="appController as ctrl">
+    	<pre>{{ ctrl.error }}</pre>
+    	<pre>{{ ctrl.response | json }}</pre>
+  	</div>
+</body>
+</html>

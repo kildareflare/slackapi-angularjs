@@ -1,8 +1,7 @@
 ﻿'use strict';
 (function (angular) {
 
-    angular.module("Deg.SlackApi").service('slackSvc', ['$http', '$log', 'slackConfig', function ($http, $log, slackConfig) {
-
+    angular.module("Deg.SlackApi").service('slackSvc', ['$http', '$window', '$log', 'slackConfig', function ($http, $window, $log, slackConfig) {
 
         return {
             //auth
@@ -113,311 +112,313 @@
         };
 
         // USERS
-        function getUserPresence(userId, callback, token) {
+        function getUserPresence(userId, token) {
             var params = {
                 token: token || slackConfig.DefaultToken,
                 user: userId
             };
-            executeApiCall("users.getPresence", params, callback);
+            return executeApiCall("users.getPresence", params);
         }
-        function getUserinfo(userId, callback, token) {
+        function getUserinfo(userId, token) {
             var params = {
                 token: token || slackConfig.DefaultToken,
                 user: userId
             };
-            executeApiCall("users.info", params, callback);
+            return executeApiCall("users.info", params);
         }
-        function getUserslist(callback, token) {
+        function getUserslist(token) {
             var params = {
                 token: token || slackConfig.DefaultToken
             };
-            executeApiCall("users.list", params, callback);
+            return executeApiCall("users.list", params);
         }
-        function setUserActive(callback, token) {
+        function setUserActive(token) {
             var params = {
                 token: token || slackConfig.DefaultToken
             };
-            executeApiCall("users.setActive", params, callback);
+            return executeApiCall("users.setActive", params);
         }
-        function setUserPresence(status, callback, token) {
+        function setUserPresence(status, token) {
             var params = {
                 token: token || slackConfig.DefaultToken,
                 presence: status
             };
-            executeApiCall("users.setPresence", params, callback);
+            return executeApiCall("users.setPresence", params);
         }
-
-
         function startRtm(token) {
             var params = {
                 token: token || slackConfig.DefaultToken
             };
-            executeApiCall("auth.test", params);
+            return executeApiCall("auth.test", params);
         }
 
         //AUTH
         function authorizeApp(clientId, params) {
             var qs = "&" + toQueryString(params);
             var url = slackConfig.OAuthUrl + "?client_id=" + clientId + qs;
-            window.location.replace(url);
+            $window.location.href= url;
         }
-        function initToken(token, callback) {
+        function initToken(token) {
             slackConfig.DefaultToken = token;
-            authTest(callback);
+            return authTest(); //TODO test
         }
-        function getAccessToken(client, secret, code, callback) {
+        function getAccessToken(client, secret, code) {
             var params = {
                 client_id: client,
                 client_secret: secret,
                 code: code
             };
-            executeApiCall("oauth.access", params, callback);
+            return executeApiCall("oauth.access", params);
         }
-        function authTest(callback, token) {
+        function authTest(token) {
             var params = {
                 token: token || slackConfig.DefaultToken
             };
-            executeApiCall("auth.test", params, callback);
+            return executeApiCall("auth.test", params);
         }
         // CHANNELS
-        function archiveChannel(channeId, callback, token) {
+        function archiveChannel(channeId, token) {
             var params = {
                 token: token || slackConfig.DefaultToken,
                 channel: channeId
             };
-            executeApiCall("channels.archive", params, callback);
+            return executeApiCall("channels.archive", params);
         }
-        function channelUnarchive(channeId, callback, token) {
+        function channelUnarchive(channeId, token) {
             var params = {
                 token: token || slackConfig.DefaultToken,
                 channel: channeId
             };
-            executeApiCall("channels.unarchive", params, callback);
+            return executeApiCall("channels.unarchive", params);
         }
-        function channelHistory(channeId, callback, token) {
+        function channelHistory(channeId, token) {
             var params = {
                 token: token || slackConfig.DefaultToken,
                 channel: channeId
             };
-            executeApiCall("channels.history", params, callback);
+            return executeApiCall("channels.history", params);
         }
-        function channelInvite(channeId, userId, callback, token) {
+        function channelInvite(channeId, userId, token) {
             var params = {
                 token: token || slackConfig.DefaultToken,
                 channel: channeId,
                 user: userId
             };
-            executeApiCall("channels.invite", params, callback);
+            return executeApiCall("channels.invite", params);
         }
-        function channelJoin(channeName, callback, token) {
+        function channelJoin(channeName, token) {
             var params = {
                 token: token || slackConfig.DefaultToken,
                 channel: channeName
             };
-            executeApiCall("channels.join", params, callback);
+            return executeApiCall("channels.join", params);
         }
-        function channelKick(channelId, userId, callback, token) {
+        function channelKick(channelId, userId, token) {
             var params = {
                 token: token || slackConfig.DefaultToken,
                 channel: channelId,
                 user: userId
             };
-            executeApiCall("channels.kick", params, callback);
+            return executeApiCall("channels.kick", params);
         }
-        function channelleave(channelId, callback, token) {
+        function channelleave(channelId, token) {
             var params = {
                 token: token || slackConfig.DefaultToken,
                 channel: channelId
             };
-            executeApiCall("channels.leave", params, callback);
+            return executeApiCall("channels.leave", params);
         }
-        function channelMark(channelId, timeStamp, callback, token) {
+        function channelMark(channelId, timeStamp, token) {
             var params = {
                 token: token || slackConfig.DefaultToken,
                 channel: channelId,
                 ts: timeStamp
             };
-            executeApiCall("channels.mark", params, callback);
+            return executeApiCall("channels.mark", params);
         }
-        function channelRename(channelId, callback, token) {
+        function channelRename(channelId, token) {
             var params = {
                 token: token || slackConfig.DefaultToken,
                 channel: channelId
             };
-            executeApiCall("channels.rename", params, callback);
+            return executeApiCall("channels.rename", params);
         }
 
-        function channelSetPurpose(channelId, text, callback, token) {
+        function channelSetPurpose(channelId, text, token) {
             var params = {
                 token: token || slackConfig.DefaultToken,
                 channel: channelId,
                 purpose: text
             };
-            executeApiCall("channels.setPurpose", params, callback);
+            return executeApiCall("channels.setPurpose", params);
         }
-        function channelSetTopic(channelId, text, callback, token) {
+        function channelSetTopic(channelId, text, token) {
             var params = {
                 token: token || slackConfig.DefaultToken,
                 channel: channelId,
                 topic: text
             };
-            executeApiCall("channels.setTopic", params, callback);
+            return executeApiCall("channels.setTopic", params);
         }
-        function getChannelList(callback, token) {
+        function getChannelList(token) {
             var params = {
                 token: token || slackConfig.DefaultToken
             };
-            executeApiCall("channels.list", params, callback);
+            return executeApiCall("channels.list", params);
         }
-        function getChannel(channelId, callback, token) {
+        function getChannel(channelId, token) {
             var params = {
                 token: token || slackConfig.DefaultToken,
                 channel: channelId
             };
-            executeApiCall("channels.info", params, callback);
+            return executeApiCall("channels.info", params);
         }
-        function createChannel(channeName, callback, token) {
+        function createChannel(channeName, token) {
             var params = {
                 token: token || slackConfig.DefaultToken,
                 name: channeName
             };
-            executeApiCall("channels.create", params, callback);
+            return executeApiCall("channels.create", params);
         }
 
         // CHAT
-        function postMessage(channeId, message, callback, token) {
+        function postMessage(channeId, message, token) {
             var params = {
                 token: token || slackConfig.DefaultToken,
                 channel: channeId,
                 text: message
             };
-            executeApiCall("channels.info", params, callback);
+            return executeApiCall("channels.info", params);
         }
-        function deleteMessage(channeId, timestamp, callback, token) {
+        function deleteMessage(channeId, timestamp, token) {
             var params = {
                 token: token || slackConfig.DefaultToken,
                 channel: channeId,
                 ts: timestamp
             };
-            executeApiCall("chat.delete", params, callback);
+            return executeApiCall("chat.delete", params);
         }
-        function updateMessage(channeId, timestamp, newMessage, callback, token) {
+        function updateMessage(channeId, timestamp, newMessage, token) {
             var params = {
                 token: token || slackConfig.DefaultToken,
                 channel: channeId,
                 ts: timestamp,
                 text: newMessage
             };
-            executeApiCall("chat.update", params, callback);
+            return executeApiCall("chat.update", params);
         }
 
         // TEAM
-        function getTeamInfo(callback, token) {
+        function getTeamInfo(token) {
             var params = {
                 token: token || slackConfig.DefaultToken
             };
-            executeApiCall("team.info", params, callback);
+            return executeApiCall("team.info", params);
         }
-        function teamLogs(callback, token) {
+        function teamLogs(token) {
             var params = {
                 token: token || slackConfig.DefaultToken
             };
-            executeApiCall("team.accessLogs", params, callback);
+            return executeApiCall("team.accessLogs", params);
         }
         // FILES
-        function deleteFile(fileId, callback, token) {
+        function deleteFile(fileId, token) {
             var params = {
                 token: token || slackConfig.DefaultToken,
                 file: fileId
             };
-            executeApiCall("files.delete", params, callback);
+            return executeApiCall("files.delete", params);
         }
 
-        function getFileInfo(fileId, callback, token) {
+        function getFileInfo(fileId, token) {
             var params = {
                 token: token || slackConfig.DefaultToken,
                 file: fileId
             };
-            executeApiCall("files.info", params, callback);
+            return executeApiCall("files.info", params);
         }
 
-        function listfiles(callback, token) {
+        function listfiles(token) {
             var params = {
                 token: token || slackConfig.DefaultToken
             };
-            executeApiCall("files.list", params, callback);
+            return executeApiCall("files.list", params);
         }
-        function uploadFile(params, callback) {
+        function uploadFile(params) {
 
             params.token = token || slackConfig.DefaultToken;
 
             if (params.content) {
                 var url = slackConfig.ApiUrl + "files.upload";
-                executePostRequest(url, params, callback);
+                executePostRequest(url, params);
             }
 
-            executeApiCall("files.upload", params, callback);
+            return executeApiCall("files.upload", params);
         }
 
         // SEARCH
-        function searchFiles(query, callback, token) {
+        function searchFiles(query, token) {
             var params = {
                 token: token || slackConfig.DefaultToken,
                 query: query
             };
-            executeApiCall("search.files", params, callback);
+            return executeApiCall("search.files", params);
         }
-        function searchAll(query, callback, token) {
+        function searchAll(query, token) {
             var params = {
                 token: token || slackConfig.DefaultToken,
                 query: query
             };
-            executeApiCall("search.all", params, callback);
+            return executeApiCall("search.all", params);
         }
-        function searchMessages(query, callback, token) {
+        function searchMessages(query, token) {
             var params = {
                 token: token || slackConfig.DefaultToken,
                 query: query
             };
-            executeApiCall("search.messages", params, callback);
+            return executeApiCall("search.messages", params);
         }
 
         // STARS
-        function starsList(userId, callback, token) {
+        function starsList(userId, token) {
             var params = {
                 token: token || slackConfig.DefaultToken,
                 user: userId
             };
-            executeApiCall("stars.list", params, callback);
+            return executeApiCall("stars.list", params);
         }
 
         // HELPERS
-        function executeApiCall(endpoint, paramsObj, callback) {
+        function executeApiCall(endpoint, paramsObj) {
             var qs = toQueryString(paramsObj);
             var url = slackConfig.ApiUrl + endpoint + "?" + qs;
-            executeGetRequest(url, callback);
+            return executeGetRequest(url);
         }
-        function executeGetRequest(url, callback) {
-            $http.get(url).
-              success(function (result) {
-                  if (callback)
-                      callback(result);
-              }).
-              error(function (data, status) {
-                  $log.log(status);
-                  $log.log(data);
-              });
+        function executeGetRequest(url) {
+            return $http.get(url)
+                .then(function(result) {
+                      return result.data;
+                })
+                .catch(function(response) {
+                    $log.log(response.status);
+                    $log.log(response.data);
+                })
+                .finally(function() {
+                    
+                });
         }
-        function executePostRequest(url, data, callback) {
-            $http.post(url, data).
-              success(function (result) {
-
-                  callback(result);
-              }).
-              error(function (data, status) {
-                  $log.log(status);
-                  $log.log(data);
-              });
+        function executePostRequest(url, data) {
+            return $http.post(url, data)
+                .then(function(result) {
+                     result.data;
+                })
+                .catch(function(response) {
+                    $log.log(response.status);
+                    $log.log(response.data);
+                })
+                .finally(function() {
+                    
+                });
         }
         function toQueryString(obj) {
             var parts = [];
