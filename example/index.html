@@ -21,7 +21,7 @@
 		
         slackSvc.InitToken('your token here');
     
-		slackSvc.auth.test()
+		slackSvc.users.list()
 			.then(function(response){
 				if(response.ok )
 				{
